@@ -6,9 +6,13 @@ const path = fileURLToPath(import.meta.url);
 
 export default {
   root: join(dirname(path), "client"),
-  plugins: [react()],
+  plugins: [
+    react({
+      jsxRuntime: 'automatic'  // This enables the new JSX transform
+    })
+  ],
   build: {
-    outDir: "../dist/client",  // This ensures it outputs relative to project root
+    outDir: "../dist/client",
     emptyOutDir: true,
   },
   define: {
