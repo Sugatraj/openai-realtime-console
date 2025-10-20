@@ -65,7 +65,7 @@ export default function SettingsModal({
             <textarea
               value={customInstructions}
               onChange={handleInstructionsChange}
-              placeholder="Example: You are a helpful trading assistant specializing in F&O strategies. Always provide risk assessments and real-world examples. Keep responses concise and actionable."
+              placeholder="Example: You are a helpful trading assistant specializing in F&O strategies. Always provide risk assessments and real-world examples. Keep responses concise and actionable. Always respond in English unless the user asks to speak in a specific language."
               className="w-full border border-gray-300 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[150px] resize-y"
             />
             <div className="flex items-center justify-between mt-2">
@@ -90,25 +90,25 @@ export default function SettingsModal({
             <h3 className="text-md font-semibold mb-2">Example Templates</h3>
             <div className="flex flex-col gap-2">
               <button
-                onClick={() => setCustomInstructions("You are a professional trading assistant specializing in F&O strategies. Always provide risk assessments and real-world examples.")}
+                onClick={() => setCustomInstructions("You are a professional trading assistant specializing in F&O strategies. Always provide risk assessments and real-world examples. Always respond in English unless the user asks to speak in a specific language.")}
                 className="text-left p-3 border border-gray-200 rounded-md hover:bg-gray-50 text-sm"
               >
                 <strong>Trading Assistant</strong>
-                <p className="text-xs text-gray-600">Professional F&O trading advisor</p>
+                <p className="text-xs text-gray-600">Professional F&O trading advisor (English default)</p>
               </button>
               <button
-                onClick={() => setCustomInstructions("You are a friendly teacher. Explain complex topics in simple terms with analogies. Speak slowly and clearly.")}
+                onClick={() => setCustomInstructions("You are a friendly teacher. Explain complex topics in simple terms with analogies. Speak slowly and clearly. Always respond in English unless the user asks to speak in a specific language.")}
                 className="text-left p-3 border border-gray-200 rounded-md hover:bg-gray-50 text-sm"
               >
                 <strong>Friendly Teacher</strong>
-                <p className="text-xs text-gray-600">Patient educator with simple explanations</p>
+                <p className="text-xs text-gray-600">Patient educator with simple explanations (English default)</p>
               </button>
               <button
-                onClick={() => setCustomInstructions("You are a concise AI. Answer in one sentence maximum unless asked for details.")}
+                onClick={() => setCustomInstructions("You are a concise AI. Answer in one sentence maximum unless asked for details. Always respond in English unless the user asks to speak in a specific language.")}
                 className="text-left p-3 border border-gray-200 rounded-md hover:bg-gray-50 text-sm"
               >
                 <strong>Concise Mode</strong>
-                <p className="text-xs text-gray-600">Brief, to-the-point responses</p>
+                <p className="text-xs text-gray-600">Brief, to-the-point responses (English default)</p>
               </button>
             </div>
           </div>

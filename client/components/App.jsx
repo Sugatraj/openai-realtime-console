@@ -7,6 +7,9 @@ import ToolPanel from "./ToolPanel";
 import SettingsModal from "./SettingsModal";
 import { Settings } from "react-feather";
 
+// Default prompt for sessions without custom instructions
+const DEFAULT_PROMPT = "You are a helpful AI assistant. Always respond in English unless the user asks to speak in a specific language. You can roleplay as any character or persona when requested.";
+
 export default function App() {
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [events, setEvents] = useState([]);
@@ -15,6 +18,7 @@ export default function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const peerConnection = useRef(null);
   const audioElement = useRef(null);
+  const instructionsAppliedRef = useRef(false);
 
   async function startSession() {
     try {
@@ -175,22 +179,34 @@ export default function App() {
 
     const latestEvent = events[events.length - 1];
     
-    // Apply custom instructions when session is created
-    if (latestEvent.type === "session.created") {
+    // Apply custom instructions when session is created (only once per session)
+    if (latestEvent.type === "session.created" && !instructionsAppliedRef.current) {
       const savedInstructions = localStorage.getItem('customInstructions');
-      if (savedInstructions && savedInstructions.trim()) {
-        setTimeout(() => {
-          sendClientEvent({
-            type: "session.update",
-            session: {
-              instructions: savedInstructions,
-            },
-          });
-          console.log('[instructions] Auto-applied on session start:', savedInstructions);
-        }, 100);
-      }
+      
+      // Use saved instructions OR default prompt
+      const instructionsToApply = savedInstructions && savedInstructions.trim() 
+        ? savedInstructions 
+        : DEFAULT_PROMPT;
+      
+      setTimeout(() => {
+        sendClientEvent({
+          type: "session.update",
+          session: {
+            instructions: instructionsToApply,
+          },
+        });
+        console.log('[instructions] Auto-applied on session start:', instructionsToApply);
+        instructionsAppliedRef.current = true; // Mark as applied
+      }, 100);
     }
-  }, [events, sendClientEvent]);
+  }, [events]); // ✅ Remove sendClientEvent from dependencies
+
+  // Reset instructions flag when session ends
+  useEffect(() => {
+    if (!isSessionActive) {
+      instructionsAppliedRef.current = false;
+    }
+  }, [isSessionActive]);
 
   return (
     <>

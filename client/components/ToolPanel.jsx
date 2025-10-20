@@ -83,16 +83,15 @@ export default function ToolPanel({
 }) {
   const [functionAdded, setFunctionAdded] = useState(false);
   const [functionCallOutput, setFunctionCallOutput] = useState(null);
-  const [selectedVoice, setSelectedVoice] = useState('marin');
-  const [voiceApplied, setVoiceApplied] = useState(false);
-
-  // Load saved voice from localStorage after component mounts (client-side only)
-  useEffect(() => {
-    const savedVoice = localStorage.getItem('selectedVoice');
-    if (savedVoice) {
-      setSelectedVoice(savedVoice);
+  const [selectedVoice, setSelectedVoice] = useState(() => {
+    // Check if we're in browser environment (not SSR)
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const savedVoice = localStorage.getItem('selectedVoice');
+      return savedVoice || 'marin';
     }
-  }, []);
+    return 'marin'; // Fallback for SSR
+  });
+  const [voiceApplied, setVoiceApplied] = useState(false);
 
   // Handle voice selection change
   const handleVoiceChange = (event) => {
