@@ -1,12 +1,14 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "nodemon server.js --dev",
-    "start": "node server.js",
+    "dev": "cross-env NODE_ENV=development nodemon server.js",
+    "dev:server": "cross-env NODE_ENV=development nodemon server.js",
+    "dev:client": "cross-env NODE_ENV=development vite --port 5173",
+    "start": "cross-env NODE_ENV=production node server.js",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "vite build --ssrManifest",
-    "build:server": "vite build --outDir dist/server --ssr /index.js",
-    "devinstall": "zx ../../devinstall.mjs -- node server.js --dev",
+    "build:client": "cross-env NODE_ENV=production vite build --ssrManifest",
+    "build:server": "cross-env NODE_ENV=production vite build --outDir dist/server --ssr /index.js",
+    "preview": "cross-env NODE_ENV=production npm run build && npm start",
     "lint": "eslint . --ext .js,.jsx --fix"
   },
   "dependencies": {
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
+    "cross-env": "^10.1.0",
     "nodemon": "^3.1.10",
     "postcss": "^8.4.31",
     "postcss-nesting": "^12.0.2",

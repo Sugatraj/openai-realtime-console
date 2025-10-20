@@ -13,10 +13,24 @@ export default function App() {
   const audioElement = useRef(null);
 
   async function startSession() {
-    // Get a session token for OpenAI Realtime API
-    const tokenResponse = await fetch(`${import.meta.env.VITE_API_URL}/token`);
-    const data = await tokenResponse.json();
-    const EPHEMERAL_KEY = data.value;
+    try {
+      console.log("🔑 Fetching token from:", `${import.meta.env.VITE_API_URL}/token`);
+      
+      // Get a session token for OpenAI Realtime API
+      const tokenResponse = await fetch(`${import.meta.env.VITE_API_URL}/token`);
+      
+      if (!tokenResponse.ok) {
+        throw new Error(`Token request failed: ${tokenResponse.status} ${tokenResponse.statusText}`);
+      }
+      
+      const data = await tokenResponse.json();
+      console.log("✅ Token received:", data);
+      
+      if (!data.value) {
+        throw new Error("No token value received from server");
+      }
+      
+      const EPHEMERAL_KEY = data.value;
 
     // Create a peer connection
     const pc = new RTCPeerConnection();
@@ -56,6 +70,12 @@ export default function App() {
     await pc.setRemoteDescription(answer);
 
     peerConnection.current = pc;
+    console.log("✅ Session started successfully");
+    
+    } catch (error) {
+      console.error("❌ Failed to start session:", error.message);
+      alert(`Failed to start session: ${error.message}`);
+    }
   }
 
   // Stop current session, clean up peer connection and data channel

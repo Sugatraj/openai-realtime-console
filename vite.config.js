@@ -1,3 +1,4 @@
+// vite.config.js - Fixed version
 import { join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import react from "@vitejs/plugin-react";
@@ -8,7 +9,7 @@ export default {
   root: join(dirname(path), "client"),
   plugins: [
     react({
-      jsxRuntime: 'automatic'  // This enables the new JSX transform
+      jsxRuntime: 'automatic'
     })
   ],
   build: {
@@ -16,6 +17,16 @@ export default {
     emptyOutDir: true,
   },
   define: {
-    'import.meta.env.VITE_API_URL': JSON.stringify('/api')
+    'import.meta.env.VITE_API_URL': JSON.stringify('http://localhost:3000')
+  },
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
   }
 };
