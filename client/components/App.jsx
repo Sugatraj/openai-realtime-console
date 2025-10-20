@@ -175,29 +175,38 @@ export default function App() {
         </div>
       </nav>
       <main className="absolute top-16 left-0 right-0 bottom-0">
-        {/* Reserve space for the right sidebar (380px) so controls do not go underneath it */}
-        <section className="absolute top-0 left-0 right-[380px] bottom-0">
-          {/* Left content area (event log hidden per request) */}
-          <section className="absolute h-32 left-0 right-0 bottom-0 p-4">
-            <SessionControls
-              startSession={startSession}
-              stopSession={stopSession}
-              sendClientEvent={sendClientEvent}
-              sendTextMessage={sendTextMessage}
-              events={events}
-              isSessionActive={isSessionActive}
-              micTrack={micTrack}
-            />
+        {/* Main content area - full width */}
+        <section className="absolute top-0 left-0 right-0 bottom-0 flex flex-col">
+          {/* Main content area - takes remaining space */}
+          <section className="flex-1 p-4">
+            {/* Content area for future use */}
           </section>
-        </section>
-        <section className="absolute top-0 w-[380px] right-0 bottom-0 p-4 pt-0 overflow-y-auto bg-white border-l border-gray-200">
-          <ToolPanel
-            sendClientEvent={sendClientEvent}
-            sendTextMessage={sendTextMessage}
-            events={events}
-            isSessionActive={isSessionActive}
-            showOnlyVoice={true}
-          />
+          
+          {/* Sticky bottom section with Voice Settings and Controls */}
+          <section className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex items-center justify-center gap-4">
+            {/* Group Voice Settings and Session Controls together */}
+            <div className="flex items-center gap-4">
+              {/* Voice Settings */}
+              <ToolPanel
+                sendClientEvent={sendClientEvent}
+                sendTextMessage={sendTextMessage}
+                events={events}
+                isSessionActive={isSessionActive}
+                showOnlyVoice={true}
+              />
+              
+              {/* Session Controls */}
+              <SessionControls
+                startSession={startSession}
+                stopSession={stopSession}
+                sendClientEvent={sendClientEvent}
+                sendTextMessage={sendTextMessage}
+                events={events}
+                isSessionActive={isSessionActive}
+                micTrack={micTrack}
+              />
+            </div>
+          </section>
         </section>
       </main>
     </>

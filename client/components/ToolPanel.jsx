@@ -176,33 +176,28 @@ export default function ToolPanel({
   }, [isSessionActive]);
 
   return (
-    <section className="h-full w-full flex flex-col gap-4">
-      {/* Voice Selector */}
-      <div className="bg-gray-50 rounded-md p-4">
-        <h2 className="text-lg font-bold mb-3">Voice Settings</h2>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="voice-select" className="text-sm font-medium text-gray-700">
-            Choose Voice:
-          </label>
-          <select
-            id="voice-select"
-            value={selectedVoice}
-            onChange={handleVoiceChange}
-            className="border border-gray-200 rounded-md p-2 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            disabled={false}
-          >
-            {voices.map((voice) => (
-              <option key={voice.value} value={voice.value}>
-                {voice.label}
-              </option>
-            ))}
-          </select>
-          {!isSessionActive && (
-            <p className="text-xs text-gray-500">
-              Start a session to change voice settings
-            </p>
-          )}
-        </div>
+    <section className="w-full">
+      {/* Voice Selector - Ultra compact for bottom placement */}
+      <div className="flex items-center gap-3">
+        <span className="text-sm font-medium text-gray-600">Voice:</span>
+        <select
+          id="voice-select"
+          value={selectedVoice}
+          onChange={handleVoiceChange}
+          className="border border-gray-300 rounded-md px-2 py-1 bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          disabled={false}
+        >
+          {voices.map((voice) => (
+            <option key={voice.value} value={voice.value}>
+              {voice.label}
+            </option>
+          ))}
+        </select>
+        {!isSessionActive && (
+          <span className="text-xs text-gray-400">
+            Start session to change
+          </span>
+        )}
       </div>
 
       {/* Color Palette Tool */}
