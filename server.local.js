@@ -43,11 +43,7 @@ const sessionConfig = JSON.stringify({
   session: {
     type: "realtime",
     model: "gpt-realtime",
-    audio: {
-      output: {
-        voice: "marin",
-      },
-    },
+    // Remove the audio.output.voice config - let frontend handle it
   },
 });
 

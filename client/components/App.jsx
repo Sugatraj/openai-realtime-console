@@ -4,12 +4,15 @@ import logo from "/assets/openai-logomark.svg";
 import EventLog from "./EventLog";
 import SessionControls from "./SessionControls";
 import ToolPanel from "./ToolPanel";
+import SettingsModal from "./SettingsModal";
+import { Settings } from "react-feather";
 
 export default function App() {
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [events, setEvents] = useState([]);
   const [dataChannel, setDataChannel] = useState(null);
   const [micTrack, setMicTrack] = useState(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const peerConnection = useRef(null);
   const audioElement = useRef(null);
 
@@ -166,20 +169,57 @@ export default function App() {
     }
   }, [dataChannel]);
 
+  // Apply custom instructions when session is created
+  useEffect(() => {
+    if (!events || events.length === 0) return;
+
+    const latestEvent = events[events.length - 1];
+    
+    // Apply custom instructions when session is created
+    if (latestEvent.type === "session.created") {
+      const savedInstructions = localStorage.getItem('customInstructions');
+      if (savedInstructions && savedInstructions.trim()) {
+        setTimeout(() => {
+          sendClientEvent({
+            type: "session.update",
+            session: {
+              instructions: savedInstructions,
+            },
+          });
+          console.log('[instructions] Auto-applied on session start:', savedInstructions);
+        }, 100);
+      }
+    }
+  }, [events, sendClientEvent]);
+
   return (
     <>
-      <nav className="absolute top-0 left-0 right-0 h-16 flex items-center">
-        <div className="flex items-center gap-4 w-full m-4 pb-2 border-0 border-b border-solid border-gray-200">
-          <img style={{ width: "24px" }} src={logo} />
-          <h1>realtime console</h1>
+      <nav className="absolute top-0 left-0 right-0 h-16 bg-white border-b border-gray-200">
+        <div className="flex items-center justify-between w-full h-full px-4">
+          <div className="flex items-center gap-4">
+            <img style={{ width: "24px" }} src={logo} />
+            <h1>realtime console</h1>
+          </div>
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+            title="Settings"
+          >
+            <Settings height={20} className="text-gray-600" />
+          </button>
         </div>
       </nav>
       <main className="absolute top-16 left-0 right-0 bottom-0">
         {/* Main content area - full width */}
         <section className="absolute top-0 left-0 right-0 bottom-0 flex flex-col">
-          {/* Main content area - takes remaining space */}
-          <section className="flex-1 p-4">
-            {/* Content area for future use */}
+          {/* Main content area - clean and empty */}
+          <section className="flex-1 p-4 overflow-y-auto">
+            <div className="flex items-center justify-center h-full text-gray-400">
+              <div className="text-center">
+                <p className="text-lg">Ready to start</p>
+                <p className="text-sm mt-2">Click settings icon to configure custom instructions</p>
+              </div>
+            </div>
           </section>
           
           {/* Sticky bottom section with Voice Settings and Controls */}
@@ -209,6 +249,14 @@ export default function App() {
           </section>
         </section>
       </main>
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        isSessionActive={isSessionActive}
+        sendClientEvent={sendClientEvent}
+      />
     </>
   );
 }
