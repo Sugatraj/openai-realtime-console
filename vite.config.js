@@ -1,4 +1,4 @@
-// vite.config.js - Fixed version
+// vite.config.js - Production-ready version
 import { join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import react from "@vitejs/plugin-react";
@@ -17,7 +17,12 @@ export default {
     emptyOutDir: true,
   },
   define: {
-    'import.meta.env.VITE_API_URL': JSON.stringify('http://localhost:3000')
+    // Dynamic API URL based on environment
+    'import.meta.env.VITE_API_URL': JSON.stringify(
+      process.env.NODE_ENV === 'production' 
+        ? '/api'  // Production: Netlify redirects to Linode
+        : 'http://localhost:3000'  // Development: Direct to local server
+    )
   },
   server: {
     port: 5173,
