@@ -7,6 +7,11 @@
   VITE_API_URL = "/api"
 
 [[redirects]]
+  from = "/api/*"
+  to = "http://172.105.43.82:8000/:splat"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
