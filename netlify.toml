@@ -4,7 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "18"
-  VITE_API_URL = "/api"
+  VITE_API_URL = "http://172.105.43.82:8000"
 
 [[redirects]]
   from = "/*"
