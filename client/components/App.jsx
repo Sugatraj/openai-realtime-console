@@ -9,6 +9,7 @@ export default function App() {
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [events, setEvents] = useState([]);
   const [dataChannel, setDataChannel] = useState(null);
+  const [micTrack, setMicTrack] = useState(null);
   const peerConnection = useRef(null);
   const audioElement = useRef(null);
 
@@ -44,7 +45,9 @@ export default function App() {
     const ms = await navigator.mediaDevices.getUserMedia({
       audio: true,
     });
-    pc.addTrack(ms.getTracks()[0]);
+    const track = ms.getTracks()[0];
+    pc.addTrack(track);
+    setMicTrack(track);
 
     // Set up data channel for sending and receiving events
     const dc = pc.createDataChannel("oai-events");
@@ -96,6 +99,7 @@ export default function App() {
 
     setIsSessionActive(false);
     setDataChannel(null);
+    setMicTrack(null);
     peerConnection.current = null;
   }
 
@@ -182,6 +186,7 @@ export default function App() {
               sendTextMessage={sendTextMessage}
               events={events}
               isSessionActive={isSessionActive}
+              micTrack={micTrack}
             />
           </section>
         </section>

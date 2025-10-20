@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { CloudLightning, CloudOff, MessageSquare } from "react-feather";
+import { CloudLightning, CloudOff, MessageSquare, Mic, MicOff, Pause, Play } from "react-feather";
 import Button from "./Button";
 
 function SessionStopped({ startSession }) {
@@ -26,13 +26,28 @@ function SessionStopped({ startSession }) {
   );
 }
 
-function SessionActive({ stopSession, sendTextMessage }) {
+function SessionActive({ stopSession, sendTextMessage, micTrack }) {
   const [message, setMessage] = useState("");
+  const [isMicMuted, setIsMicMuted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   function handleSendClientEvent() {
     sendTextMessage(message);
     setMessage("");
   }
+
+  const toggleMic = () => {
+    if (micTrack) {
+      micTrack.enabled = !micTrack.enabled;
+      setIsMicMuted(!micTrack.enabled);
+    }
+  };
+
+  const togglePause = () => {
+    // Pause implementation: stop/resume data channel or use VAD control
+    setIsPaused(!isPaused);
+    // Send session.update to control turn detection if needed
+  };
 
   return (
     <div className="flex items-center justify-center w-full h-full gap-4">
@@ -59,6 +74,20 @@ function SessionActive({ stopSession, sendTextMessage }) {
       >
         send text
       </Button>
+      <Button
+        onClick={toggleMic}
+        icon={isMicMuted ? <MicOff height={16} /> : <Mic height={16} />}
+        className={isMicMuted ? "bg-red-500" : "bg-green-500"}
+      >
+        {isMicMuted ? "unmute" : "mute"}
+      </Button>
+      <Button
+        onClick={togglePause}
+        icon={isPaused ? <Play height={16} /> : <Pause height={16} />}
+        className={isPaused ? "bg-gray-500" : "bg-blue-500"}
+      >
+        {isPaused ? "resume" : "pause"}
+      </Button>
       <Button onClick={stopSession} icon={<CloudOff height={16} />}>
         disconnect
       </Button>
@@ -73,6 +102,7 @@ export default function SessionControls({
   sendTextMessage,
   serverEvents,
   isSessionActive,
+  micTrack,
 }) {
   return (
     <div className="flex gap-4 border-t-2 border-gray-200 h-full rounded-md">
@@ -82,6 +112,7 @@ export default function SessionControls({
           sendClientEvent={sendClientEvent}
           sendTextMessage={sendTextMessage}
           serverEvents={serverEvents}
+          micTrack={micTrack}
         />
       ) : (
         <SessionStopped startSession={startSession} />
