@@ -16,6 +16,6 @@ export default {
     emptyOutDir: true,
   },
   define: {
-    'import.meta.env.VITE_API_URL': JSON.stringify('http://172.105.43.82:8000')
+    'import.meta.env.VITE_API_URL': JSON.stringify('/api')
   }
 };
